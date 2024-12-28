@@ -9,14 +9,20 @@ public interface PostDAO {
 
     List<PostDTO> findAllPosts();
 
-    PostDTO findPostWithComments(String id);
     Post findPostById(String id);
 
-    void savePost(Post user);
+    List<PostDTO> findPostsByUserId(String userId);
+
+    PostDTO findPostWithComments(String id);
+
+    void savePost(Post post);
 
     Post updatePostTitle(String id, String title);
+
     Post updatePostContent(String id, String content);
+
     Post updatePostPublishStatus(String id, boolean publishStatus);
+
     Post updatePostThumbnailUrl(String id, String thumbnailUrl);
 
     void deletePost(String id);

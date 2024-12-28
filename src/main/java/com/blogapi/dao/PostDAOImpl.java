@@ -1,6 +1,7 @@
 package com.blogapi.dao;
 
 import com.blogapi.dto.PostDTO;
+import com.blogapi.entity.Comment;
 import com.blogapi.entity.Post;
 import com.blogapi.entity.User;
 import jakarta.persistence.EntityManager;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,10 +52,29 @@ public class PostDAOImpl implements PostDAO {
     }
 
     @Override
+    public List<PostDTO> findPostsByUserId(String userId) {
+        String jpql1 = "SELECT " +
+                "new com.blogapi.dto.PostDTO(p.id, p.title, p.content, p.isPublished, p.publishedAt, p.thumbnailUrl, p.author.id) " +
+                "FROM Post p WHERE p.author.id = :id";
+
+        TypedQuery<PostDTO> query = entityManager.createQuery(jpql1, PostDTO.class);
+
+        query.setParameter("id", userId);
+
+        return query.getResultList();
+    }
+
+    @Override
     public PostDTO findPostWithComments(String id) {
         Post post = entityManager.find(Post.class, id);
         if (post == null) {
             throw new EntityNotFoundException("Post not found with id " + id);
+        }
+
+        List<String> commentsId = new ArrayList<>();
+
+        for (Comment comment : post.getComments()) {
+            commentsId.add(comment.getId());
         }
 
         return new PostDTO(
@@ -64,7 +85,7 @@ public class PostDAOImpl implements PostDAO {
                 post.getPublishedAt(),
                 post.getThumbnailUrl(),
                 post.getAuthor().getId(),
-                post.getComments()
+                commentsId
         );
     }
 
@@ -140,7 +161,23 @@ public class PostDAOImpl implements PostDAO {
     @Override
     @Transactional
     public void deletePost(String id) {
+
+        /*
+    set to null the parent entities, do a merge, then make a flush and clear and finally,
+    get the entity again using find and remove.
+          */
+
         Post post = entityManager.find(Post.class, id);
+        if (post == null) {
+            throw new EntityNotFoundException("post not found with id " + id);
+        }
+
+        post.setAuthor(null);
+        entityManager.merge(post);
+        entityManager.flush();
+        entityManager.clear();
+
+        post = entityManager.find(Post.class, id);
         entityManager.remove(post);
     }
 }

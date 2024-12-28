@@ -25,11 +25,11 @@ public class Comment {
 
 
     //    relations
-    @ManyToOne( fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToOne( fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -88,7 +88,8 @@ public class Comment {
                 "id='" + id + '\'' +
                 ", content='" + content + '\'' +
                 ", publishedAt=" + publishedAt +
-                ", author=" + author.getUsername() +
+                ", authorId=" + author.getId() +
+                ", postId=" + post.getId() +
                 '}';
     }
 }

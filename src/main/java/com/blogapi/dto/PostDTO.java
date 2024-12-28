@@ -1,6 +1,5 @@
 package com.blogapi.dto;
 
-import com.blogapi.entity.Comment;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.util.Date;
@@ -15,7 +14,12 @@ public class PostDTO {
     private Date publishedAt;
     private String thumbnailUrl;
     private String authorId;
-    private List<Comment> comments = null;
+    private List<String> commentsId;
+
+
+    //    empty constructor is a must  to be able to populate the body in the incoming requests
+    public PostDTO() {
+    }
 
     public PostDTO(String postId, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId) {
         this.postId = postId;
@@ -27,7 +31,7 @@ public class PostDTO {
         this.authorId = authorId;
     }
 
-    public PostDTO(String postId, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId, List<Comment> comments) {
+    public PostDTO(String postId, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId, List<String> commentsId) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -35,7 +39,7 @@ public class PostDTO {
         this.publishedAt = publishedAt;
         this.thumbnailUrl = thumbnailUrl;
         this.authorId = authorId;
-        this.comments = comments;
+        this.commentsId = commentsId;
     }
 
 
@@ -95,11 +99,26 @@ public class PostDTO {
         this.authorId = authorId;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<String> getCommentsId() {
+        return commentsId;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setCommentsId(List<String> commentsId) {
+        this.commentsId = commentsId;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PostDTO{" +
+                "postId='" + postId + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", isPublished=" + isPublished +
+                ", publishedAt=" + publishedAt +
+                ", thumbnailUrl='" + thumbnailUrl + '\'' +
+                ", authorId='" + authorId + '\'' +
+                ", comments=" + commentsId +
+                '}';
     }
 }
