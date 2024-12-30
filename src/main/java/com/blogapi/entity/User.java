@@ -2,14 +2,17 @@ package com.blogapi.entity;
 
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
 @Entity
 @Table(name = "\"User\"")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -25,7 +28,7 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private Role role = Role.User;
+    private Role role = Role.USER;
 
     @Column(name = "avatarUrl")
     @Basic(optional = true)
@@ -35,12 +38,12 @@ public class User {
     //    relations
     @Column(name = "posts")
     @OneToMany(mappedBy = "author",
-                cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Post> posts = null;
 
     @Column(name = "comments")
     @OneToMany(mappedBy = "author",
-                cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Comment> comments = null;
 
 
@@ -67,6 +70,10 @@ public class User {
     //    getters/setters
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -118,7 +125,7 @@ public class User {
     }
 
     public void addComment(Comment comment) {
-        if(comments == null) {
+        if (comments == null) {
             comments = new ArrayList<>();
         }
 
@@ -134,7 +141,7 @@ public class User {
     }
 
     public void addPost(Post post) {
-        if(posts == null) {
+        if (posts == null) {
             posts = new ArrayList<>();
         }
 
@@ -142,6 +149,34 @@ public class User {
     }
 
 
+    // UserDetails methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
+
+    // toString method
     @Override
     public String toString() {
         return "User{" +

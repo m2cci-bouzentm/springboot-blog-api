@@ -8,6 +8,7 @@ import java.util.List;
 
 @EntityScan
 public class CommentDTO {
+    private String commentId;
     private String content;
     private Date publishedAt;
     private String authorId;
@@ -17,11 +18,20 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(String content, Date publishedAt, String authorId, String postId) {
+    public CommentDTO(String commentId, String content, Date publishedAt, String authorId, String postId) {
+        this.commentId= commentId;
         this.content = content;
         this.publishedAt = publishedAt;
         this.authorId = authorId;
         this.postId = postId;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
     public String getContent() {

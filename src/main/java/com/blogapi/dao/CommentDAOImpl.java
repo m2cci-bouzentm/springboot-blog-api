@@ -53,6 +53,7 @@ public class CommentDAOImpl implements CommentDAO {
 
         for (Comment c : comments) {
             CommentDTO commentDTO = new CommentDTO(
+                    c.getId(),
                     c.getContent(), c.getPublishedAt(),
                     c.getAuthor().getId(), c.getPost().getId()
             );

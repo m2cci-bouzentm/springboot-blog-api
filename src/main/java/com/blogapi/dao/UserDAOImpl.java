@@ -1,14 +1,16 @@
 package com.blogapi.dao;
 
 
-import com.blogapi.entity.Comment;
+
 import com.blogapi.entity.Role;
 import com.blogapi.entity.User;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
+import com.blogapi.response.UniqueConstraintViolationException;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 
 @Repository
@@ -37,13 +39,27 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        String jpql = "SELECT u FROM User u where u.username = :username";
+        TypedQuery<User> q = entityManager.createQuery(jpql, User.class);
+        q.setParameter("username", username);
+
+        return Optional.of(q.getSingleResult());
+    }
+
+
+    @Override
     @Transactional
     public void saveUser(User user) {
         if (!entityManager.contains(user)) {
             user = entityManager.merge(user);
         }
 
-        entityManager.persist(user);
+        try {
+            entityManager.persist(user);
+        } catch (PersistenceException e) {
+            throw new UniqueConstraintViolationException("Duplicate email or username");
+        }
     }
 
     @Override
