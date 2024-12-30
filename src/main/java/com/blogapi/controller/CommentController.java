@@ -2,7 +2,6 @@ package com.blogapi.controller;
 
 
 import com.blogapi.dto.CommentDTO;
-import com.blogapi.entity.Comment;
 import com.blogapi.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,8 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCommentOnPost(@RequestBody CommentDTO commentDTO) {
-        return commentService.createCommentOnPost(commentDTO);
+    public ResponseEntity<String> createCommentOnPost(@PathVariable String postId, @RequestBody CommentDTO commentDTO) {
+        return commentService.createCommentOnPost(postId, commentDTO);
     }
 
     @PutMapping("/{commentId}")

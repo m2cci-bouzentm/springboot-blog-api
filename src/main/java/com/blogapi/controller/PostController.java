@@ -33,7 +33,6 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<String> createPost(@RequestBody PostDTO postDTO) {
-        System.out.println(postDTO);
         return postService.createPost(postDTO);
     }
 

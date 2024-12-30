@@ -3,6 +3,7 @@ package com.blogapi.entity;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "\"User\"")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -28,7 +29,8 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "role")
-    private Role role = Role.USER;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
 
     @Column(name = "avatarUrl")
     @Basic(optional = true)
@@ -147,34 +149,6 @@ public class User implements UserDetails {
 
         posts.add(post);
     }
-
-
-    // UserDetails methods
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
-    }
-
 
     // toString method
     @Override

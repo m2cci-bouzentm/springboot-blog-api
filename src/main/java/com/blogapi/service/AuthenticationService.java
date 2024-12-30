@@ -47,7 +47,10 @@ public class AuthenticationService {
         user.setUsername(input.getUsername());
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
-        user.setRole(Role.USER);
+
+//        TODO set roles dynamically - current role default to USER
+//        user.setRole(Role.ROLE_USER);
+//        user.setRole(Role.ROLE_AUTHOR);
 
         try {
             userDAO.saveUser(user);

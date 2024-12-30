@@ -15,7 +15,7 @@ public class Comment {
     @Column(name = "id")
     private String id;
 
-    @Column(name = "content", unique = true)
+    @Column(name = "content")
     private String content;
 
 

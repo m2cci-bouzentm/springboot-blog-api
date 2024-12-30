@@ -4,11 +4,14 @@ package com.blogapi.service;
 import com.blogapi.dao.PostDAO;
 import com.blogapi.dao.UserDAO;
 import com.blogapi.dto.PostDTO;
+import com.blogapi.entity.CustomUserDetailsImpl;
 import com.blogapi.entity.Post;
 import com.blogapi.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,12 +39,20 @@ public class PostService {
     public ResponseEntity<String> createPost(PostDTO postDTO) {
 
         try {
-            Post post = new Post(postDTO.getTitle(), postDTO.getContent(), postDTO.getPublishedAt(), postDTO.isPublished(), postDTO.getThumbnailUrl());
-            User author = userDAO.findUser(postDTO.getAuthorId());
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) authentication.getPrincipal();
+            User author = userDAO.findUser(userDetails.getId());
+
+
+            Post post = new Post(postDTO.getTitle(), postDTO.getContent(),
+                                postDTO.getPublishedAt(), postDTO.isPublished(),
+                                postDTO.getThumbnailUrl());
+
             post.setAuthor(author);
             author.addPost(post);
 
             userDAO.saveUser(author);
+
             return new ResponseEntity<>("Added a post successfully", HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
@@ -53,7 +64,6 @@ public class PostService {
         try {
             Post post = postDAO.findPostById(postDTO.getPostId());
             User author = userDAO.findUser(postDTO.getAuthorId());
-
 
 
             post.setTitle(postDTO.getTitle());

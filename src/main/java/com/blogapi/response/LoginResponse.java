@@ -10,7 +10,7 @@ public class LoginResponse {
 
     private long expiresIn;
 
-    private User user;
+    private UserDTO user;
 
     public String getToken() {
         return token;
@@ -30,11 +30,11 @@ public class LoginResponse {
         return this;
     }
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 }

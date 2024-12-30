@@ -12,8 +12,12 @@ import com.blogapi.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,17 +39,21 @@ public class CommentService {
     }
 
 
-    public ResponseEntity<String> createCommentOnPost(CommentDTO commentDTO) {
+    public ResponseEntity<String> createCommentOnPost(@PathVariable String postId, CommentDTO commentDTO) {
         try {
-            Comment comment = new Comment(commentDTO.getContent(), commentDTO.getPublishedAt());
-            User author = userDAO.findUser(commentDTO.getAuthorId());
-            Post post = postDAO.findPostById(commentDTO.getPostId());
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            User author = (User) authentication.getPrincipal();
+            Post post = postDAO.findPostById(postId);
+            Comment comment = new Comment(commentDTO.getContent(), new Date(System.currentTimeMillis()));
 
             post.addComment(comment);
             author.addComment(comment);
 
             comment.setAuthor(author);
             comment.setPost(post);
+
 
             userDAO.saveUser(author);
             return new ResponseEntity<>("Created a comment successfully", HttpStatus.OK);
