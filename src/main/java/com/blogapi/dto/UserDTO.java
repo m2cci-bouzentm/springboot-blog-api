@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @EntityScan
 public class UserDTO {
+    private String id;
 
     private String username;
 
@@ -15,11 +16,20 @@ public class UserDTO {
 
     private Role role;
 
+    private String avatarUrl;
+
 
     public UserDTO() {
 
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -51,5 +61,13 @@ public class UserDTO {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

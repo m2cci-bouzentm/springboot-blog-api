@@ -70,4 +70,15 @@ public class CustomUserDetailsImpl implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
+
+    @Override
+    public String toString() {
+        return "CustomUserDetailsImpl{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", authorities=" + authorities +
+                '}';
+    }
 }

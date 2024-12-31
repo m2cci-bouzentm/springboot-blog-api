@@ -4,7 +4,7 @@ package com.blogapi.dao;
 
 import com.blogapi.entity.Role;
 import com.blogapi.entity.User;
-import com.blogapi.response.UniqueConstraintViolationException;
+import com.blogapi.exception.UniqueConstraintViolationException;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     @Transactional
-    public User updateUsernameAndEmail(String id, String username, String email) {
+    public User updateUsername(String id, String username) {
         User user = entityManager.find(User.class, id);
 
         if (user == null) {
@@ -72,6 +72,19 @@ public class UserDAOImpl implements UserDAO {
         }
 
         user.setUsername(username);
+
+        return entityManager.merge(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateEmail(String id, String email) {
+        User user = entityManager.find(User.class, id);
+
+        if (user == null) {
+            throw new EntityNotFoundException("User not found with id " + id);
+        }
+
         user.setEmail(email);
 
         return entityManager.merge(user);

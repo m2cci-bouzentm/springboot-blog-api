@@ -55,29 +55,20 @@ public class AuthenticationController {
     private ResponseEntity<LoginResponse> getLoginResponse(@RequestBody UserDTO userDto) {
         User authenticatedUser = authenticationService.authenticate(userDto);
 
-        CustomUserDetailsImpl u = new CustomUserDetailsImpl(
+        CustomUserDetailsImpl userDetails = new CustomUserDetailsImpl(
                 authenticatedUser.getId(),
                 authenticatedUser.getUsername(),
                 authenticatedUser.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority(authenticatedUser.getRole().name()))
         );
 
-        String jwtToken = jwtService.generateToken(u);
-
-
-        UserDTO user = new UserDTO();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(null);
-        user.setEmail(userDto.getEmail());
-        user.setRole(userDto.getRole());
-
-//        TODO add id to dto response
+        String jwtToken = jwtService.generateToken(userDetails);
 
         LoginResponse loginResponse = new LoginResponse()
                 .setToken(jwtToken)
                 .setExpiresIn(jwtService.getExpirationTime());
-
-        loginResponse.setUser(user);
+        loginResponse.setUser(userDto);
+        loginResponse.getUser().setId(userDetails.getId());
         loginResponse.getUser().setPassword(null);
 
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);

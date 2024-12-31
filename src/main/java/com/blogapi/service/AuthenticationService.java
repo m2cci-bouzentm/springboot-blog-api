@@ -3,10 +3,8 @@ package com.blogapi.service;
 
 import com.blogapi.dao.UserDAO;
 import com.blogapi.dto.UserDTO;
-import com.blogapi.entity.Role;
 import com.blogapi.entity.User;
-import com.blogapi.response.UniqueConstraintViolationException;
-import jakarta.persistence.EntityExistsException;
+import com.blogapi.exception.UniqueConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +29,7 @@ public class AuthenticationService {
         this.userDAO = userDAO;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     public User signup(UserDTO input) {
 

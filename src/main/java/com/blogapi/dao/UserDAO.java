@@ -14,7 +14,8 @@ public interface UserDAO {
     void saveUser(User user);
 
 
-    User updateUsernameAndEmail(String id, String username, String email);
+    User updateUsername(String id, String username);
+    User updateEmail(String id, String email);
 
     User updateUserAvatarUrl(String id, String avatarUrl);
 

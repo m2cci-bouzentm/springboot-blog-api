@@ -1,4 +1,4 @@
-package com.blogapi.security;
+package com.blogapi.config;
 
 
 import com.blogapi.dao.UserDAO;

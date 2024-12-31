@@ -1,4 +1,4 @@
-package com.blogapi.response;
+package com.blogapi.exception;
 
 public class UniqueConstraintViolationException extends RuntimeException {
     public UniqueConstraintViolationException(String message) {
