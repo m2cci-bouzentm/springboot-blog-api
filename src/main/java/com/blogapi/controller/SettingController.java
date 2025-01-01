@@ -3,48 +3,46 @@ package com.blogapi.controller;
 
 import com.blogapi.dto.UserDTO;
 import com.blogapi.response.SettingUpdateResponse;
-import com.blogapi.service.SettingsService;
+import com.blogapi.service.SettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/settings")
+@CrossOrigin
 public class SettingController {
 
-    private final SettingsService settingsService;
+    private final SettingService settingService;
 
     @Autowired
-    public SettingController( SettingsService settingsService) {
-        this.settingsService = settingsService;
+    public SettingController( SettingService settingService) {
+        this.settingService = settingService;
     }
 
 
     @PutMapping("/username")
     public ResponseEntity<SettingUpdateResponse> updateUsername(@RequestBody UserDTO userDTO) {
-        return settingsService.updateUsername(userDTO);
+        return settingService.updateUsername(userDTO);
     }
 
     @PutMapping("/email")
     public ResponseEntity<SettingUpdateResponse> updateEmail(@RequestBody UserDTO userDTO) {
-        return  settingsService.updateEmail(userDTO);
+        return  settingService.updateEmail(userDTO);
     }
 
     @PutMapping("/password")
     public ResponseEntity<SettingUpdateResponse> updatePassword(@RequestBody UserDTO userDTO) {
-        return settingsService.updatePassword(userDTO);
+        return settingService.updatePassword(userDTO);
     }
 
     @PutMapping("/avatarUrl")
     public ResponseEntity<SettingUpdateResponse> updateAvatarUrl(@RequestBody UserDTO userDTO) {
-        return settingsService.updateAvatarUrl(userDTO);
+        return settingService.updateAvatarUrl(userDTO);
     }
 
     @PutMapping("/role")
     public ResponseEntity<SettingUpdateResponse> updateRole(@RequestBody UserDTO userDTO) {
-        return settingsService.updateRole(userDTO);
+        return settingService.updateRole(userDTO);
     }
 }

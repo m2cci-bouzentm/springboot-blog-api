@@ -5,8 +5,8 @@ import com.blogapi.dao.CommentDAO;
 import com.blogapi.dao.PostDAO;
 import com.blogapi.dao.UserDAO;
 import com.blogapi.dto.CommentDTO;
-import com.blogapi.dto.PostDTO;
 import com.blogapi.entity.Comment;
+import com.blogapi.entity.CustomUserDetailsImpl;
 import com.blogapi.entity.Post;
 import com.blogapi.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +39,14 @@ public class CommentService {
     }
 
 
-    public ResponseEntity<String> createCommentOnPost(@PathVariable String postId, CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> createCommentOnPost(@PathVariable String postId, CommentDTO commentDTO) {
         try {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            User author = (User) authentication.getPrincipal();
+            CustomUserDetailsImpl currentUser= (CustomUserDetailsImpl) authentication.getPrincipal();
+
+            User author = userDAO.findUser(currentUser.getId());
             Post post = postDAO.findPostById(postId);
             Comment comment = new Comment(commentDTO.getContent(), new Date(System.currentTimeMillis()));
 
@@ -56,18 +58,18 @@ public class CommentService {
 
 
             userDAO.saveUser(author);
-            return new ResponseEntity<>("Created a comment successfully", HttpStatus.OK);
+            return new ResponseEntity<>(commentDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ResponseEntity<String> updateComment(String commentId, CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> updateComment(String commentId, String postId,  CommentDTO commentDTO) {
 
         try {
             Comment comment = commentDAO.findById(commentId);
-            User author = userDAO.findUser(commentDTO.getAuthorId());
-            Post post = postDAO.findPostById(commentDTO.getPostId());
+            User author = userDAO.findUser(comment.getAuthor().getId());
+            Post post = postDAO.findPostById(postId);
 
 
             comment.setContent(commentDTO.getContent());
@@ -76,16 +78,17 @@ public class CommentService {
 
             commentDAO.saveComment(comment);
 
-            return new ResponseEntity<>("Updated a comment successfully", HttpStatus.OK);
+            return new ResponseEntity<>(commentDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ResponseEntity<String> deleteComment(String commentId) {
+    public ResponseEntity<CommentDTO> deleteComment(String commentId) {
         try {
+            CommentDTO commentDTO = new CommentDTO();
             commentDAO.deleteComment(commentId);
-            return new ResponseEntity<>("Deleted a comment successfully", HttpStatus.OK);
+            return new ResponseEntity<>(commentDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }

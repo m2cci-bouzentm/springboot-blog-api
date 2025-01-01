@@ -3,6 +3,7 @@ package com.blogapi.service;
 import com.blogapi.dao.UserDAO;
 import com.blogapi.dto.UserDTO;
 import com.blogapi.entity.CustomUserDetailsImpl;
+import com.blogapi.entity.User;
 import com.blogapi.response.SettingUpdateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SettingsService {
+public class SettingService {
 
 
     private final UserDAO userDAO;
@@ -23,7 +24,7 @@ public class SettingsService {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SettingsService(UserDAO userDAO, JwtService jwtService, BCryptPasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    public SettingService(UserDAO userDAO, JwtService jwtService, BCryptPasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
         this.userDAO = userDAO;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
@@ -93,7 +94,9 @@ public class SettingsService {
                 .setToken(jwtToken)
                 .setExpiresIn(jwtService.getExpirationTime());
 
-        res.setUser(userDTO);
+        User user = userDAO.findUser(userDTO.getId());
+        UserDTO userDto = new UserDTO(user);
+        res.setUser(userDto);
         res.getUser().setId(userDetails.getId());
         res.getUser().setPassword(null);
 

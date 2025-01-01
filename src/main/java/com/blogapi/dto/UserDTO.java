@@ -1,6 +1,7 @@
 package com.blogapi.dto;
 
 import com.blogapi.entity.Role;
+import com.blogapi.entity.User;
 import jakarta.persistence.Column;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
@@ -21,6 +22,15 @@ public class UserDTO {
 
     public UserDTO() {
 
+    }
+
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.password= user.getPassword();
+        this.email= user.getEmail();
+        this.role = user.getRole();
+        this.avatarUrl = user.getAvatarUrl();
     }
 
     public String getId() {

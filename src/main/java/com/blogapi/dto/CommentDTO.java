@@ -4,34 +4,33 @@ package com.blogapi.dto;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.util.Date;
-import java.util.List;
 
 @EntityScan
 public class CommentDTO {
-    private String commentId;
+    private String id;
     private String content;
     private Date publishedAt;
-    private String authorId;
+    private UserDTO author;
     private String postId;
 
 
     public CommentDTO() {
     }
 
-    public CommentDTO(String commentId, String content, Date publishedAt, String authorId, String postId) {
-        this.commentId= commentId;
+    public CommentDTO(String id, String content, Date publishedAt, UserDTO author, String postId) {
+        this.id = id;
         this.content = content;
         this.publishedAt = publishedAt;
-        this.authorId = authorId;
+        this.author = author;
         this.postId = postId;
     }
 
-    public String getCommentId() {
-        return commentId;
+    public String getId() {
+        return id;
     }
 
-    public void setCommentId(String commentId) {
-        this.commentId = commentId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -50,12 +49,12 @@ public class CommentDTO {
         this.publishedAt = publishedAt;
     }
 
-    public String getAuthorId() {
-        return authorId;
+    public UserDTO getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public void setAuthor(UserDTO author) {
+        this.author = author;
     }
 
     public String getPostId() {

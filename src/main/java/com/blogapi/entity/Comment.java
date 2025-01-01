@@ -15,7 +15,7 @@ public class Comment {
     @Column(name = "id")
     private String id;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 1024)
     private String content;
 
 
@@ -88,8 +88,6 @@ public class Comment {
                 "id='" + id + '\'' +
                 ", content='" + content + '\'' +
                 ", publishedAt=" + publishedAt +
-                ", authorId=" + author.getId() +
-                ", postId=" + post.getId() +
                 '}';
     }
 }

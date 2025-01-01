@@ -19,10 +19,10 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition="text")
     private String content;
 
-    @Column(name = "isPublished")
+    @Column(name = "isPublished", columnDefinition = "BOOLEAN")
     private boolean isPublished = true;
 
     @Column(name = "publishedAt")
@@ -146,7 +146,6 @@ public class Post {
                 ", isPublished=" + isPublished +
                 ", publishedAt=" + publishedAt +
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +
-                ", author=" + author.getUsername() +
                 '}';
     }
 }

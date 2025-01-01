@@ -1,9 +1,12 @@
 package com.blogapi.service;
 
 
+import com.blogapi.dao.CommentDAO;
 import com.blogapi.dao.PostDAO;
 import com.blogapi.dao.UserDAO;
+import com.blogapi.dto.CommentDTO;
 import com.blogapi.dto.PostDTO;
+import com.blogapi.dto.UserDTO;
 import com.blogapi.entity.CustomUserDetailsImpl;
 import com.blogapi.entity.Post;
 import com.blogapi.entity.User;
@@ -21,11 +24,13 @@ public class PostService {
 
     private final PostDAO postDAO;
     private final UserDAO userDAO;
+    private final CommentDAO commentDAO;
 
     @Autowired
-    public PostService(PostDAO postDAO, UserDAO userDAO) {
+    public PostService(PostDAO postDAO, UserDAO userDAO, CommentDAO commentDAO) {
         this.postDAO = postDAO;
         this.userDAO = userDAO;
+        this.commentDAO = commentDAO;
     }
 
     public List<PostDTO> getPosts() {
@@ -33,10 +38,18 @@ public class PostService {
     }
 
     public PostDTO getPostById(String postId) {
-        return postDAO.findPostWithComments(postId);
+        PostDTO post = postDAO.findPostWithComments(postId);
+        List<CommentDTO> comments = commentDAO.findCommentsByPostId(postId);
+        User author = userDAO.findUser(post.getAuthorId());
+
+        UserDTO authorDto= new UserDTO(author);
+
+        post.setAuthor(authorDto);
+        post.setComments(comments);
+        return post;
     }
 
-    public ResponseEntity<String> createPost(PostDTO postDTO) {
+    public ResponseEntity<PostDTO> createPost(PostDTO postDTO) {
 
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -45,7 +58,7 @@ public class PostService {
 
 
             Post post = new Post(postDTO.getTitle(), postDTO.getContent(),
-                                postDTO.getPublishedAt(), postDTO.isPublished(),
+                                postDTO.getPublishedAt(), postDTO.getIsPublished(),
                                 postDTO.getThumbnailUrl());
 
             post.setAuthor(author);
@@ -53,28 +66,25 @@ public class PostService {
 
             userDAO.saveUser(author);
 
-            return new ResponseEntity<>("Added a post successfully", HttpStatus.OK);
+            return new ResponseEntity<>(postDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ResponseEntity<String> updatePost(PostDTO postDTO) {
+    public ResponseEntity<PostDTO> updatePost(PostDTO postDTO, String postId) {
 
         try {
-            Post post = postDAO.findPostById(postDTO.getPostId());
-            User author = userDAO.findUser(postDTO.getAuthorId());
+            Post post = postDAO.findPostById(postId);
 
 
             post.setTitle(postDTO.getTitle());
             post.setContent(postDTO.getContent());
-            post.setPublishedAt(postDTO.getPublishedAt());
-            post.setIsPublished(postDTO.isPublished());
             post.setThumbnailUrl(postDTO.getThumbnailUrl());
-            post.setAuthor(author);
 
-            userDAO.saveUser(author);
-            return new ResponseEntity<>("Updated a post successfully", HttpStatus.OK);
+
+            postDAO.savePost(post);
+            return new ResponseEntity<>(postDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
@@ -90,10 +100,11 @@ public class PostService {
     }
 
 
-    public ResponseEntity<String> deletePost(String postId) {
+    public ResponseEntity<PostDTO> deletePost(String postId) {
         try {
+            PostDTO postDTO  = new PostDTO();
             postDAO.deletePost(postId);
-            return new ResponseEntity<>("Deleted a post successfully", HttpStatus.OK);
+            return new ResponseEntity<>(postDTO, HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }

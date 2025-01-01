@@ -1,5 +1,6 @@
 package com.blogapi.dto;
 
+import com.blogapi.entity.User;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.util.Date;
@@ -7,22 +8,24 @@ import java.util.List;
 
 @EntityScan
 public class PostDTO {
-    private String postId;
+    private String id;
     private String title;
     private String content;
     private boolean isPublished;
     private Date publishedAt;
     private String thumbnailUrl;
     private String authorId;
+    private UserDTO author;
     private List<String> commentsId;
+    private List<CommentDTO> comments;
 
 
     //    empty constructor is a must  to be able to populate the body in the incoming requests
     public PostDTO() {
     }
 
-    public PostDTO(String postId, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId) {
-        this.postId = postId;
+    public PostDTO(String id, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.isPublished = isPublished;
@@ -31,8 +34,8 @@ public class PostDTO {
         this.authorId = authorId;
     }
 
-    public PostDTO(String postId, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId, List<String> commentsId) {
-        this.postId = postId;
+    public PostDTO(String id, String title, String content, boolean isPublished, Date publishedAt, String thumbnailUrl, String authorId, List<String> commentsId) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.isPublished = isPublished;
@@ -43,12 +46,12 @@ public class PostDTO {
     }
 
 
-    public String getPostId() {
-        return postId;
+    public String getId() {
+        return id;
     }
 
-    public void setPostId(String postId) {
-        this.postId = postId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -67,11 +70,11 @@ public class PostDTO {
         this.content = content;
     }
 
-    public boolean isPublished() {
+    public boolean getIsPublished() {
         return isPublished;
     }
 
-    public void setPublished(boolean published) {
+    public void setIsPublished(boolean published) {
         isPublished = published;
     }
 
@@ -107,11 +110,27 @@ public class PostDTO {
         this.commentsId = commentsId;
     }
 
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
+    }
+
+
+    public UserDTO getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserDTO author) {
+        this.author = author;
+    }
 
     @Override
     public String toString() {
         return "PostDTO{" +
-                "postId='" + postId + '\'' +
+                "postId='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", isPublished=" + isPublished +

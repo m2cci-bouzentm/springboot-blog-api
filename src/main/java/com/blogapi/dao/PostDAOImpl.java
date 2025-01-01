@@ -19,13 +19,17 @@ import java.util.List;
 public class PostDAOImpl implements PostDAO {
 
     private EntityManager entityManager;
+    private UserDAO userDAO;
+    private CommentDAO commentDAO;
 
     public PostDAOImpl() {
     }
 
     @Autowired
-    public PostDAOImpl(EntityManager entityManager) {
+    public PostDAOImpl(EntityManager entityManager, UserDAO userDAO, CommentDAO commentDAO) {
         this.entityManager = entityManager;
+        this.userDAO = userDAO;
+        this.commentDAO = commentDAO;
     }
 
     @Override
@@ -172,7 +176,14 @@ public class PostDAOImpl implements PostDAO {
             throw new EntityNotFoundException("post not found with id " + id);
         }
 
+
         post.setAuthor(null);
+        List<Comment> comments = post.getComments();
+        for (Comment c : comments) {
+            commentDAO.deleteComment(c.getId());
+        }
+        post.setComments(null);
+
         entityManager.merge(post);
         entityManager.flush();
         entityManager.clear();

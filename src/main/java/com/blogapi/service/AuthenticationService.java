@@ -3,11 +3,17 @@ package com.blogapi.service;
 
 import com.blogapi.dao.UserDAO;
 import com.blogapi.dto.UserDTO;
+import com.blogapi.entity.CustomUserDetailsImpl;
+import com.blogapi.entity.Role;
 import com.blogapi.entity.User;
 import com.blogapi.exception.UniqueConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +55,7 @@ public class AuthenticationService {
 
 //        TODO set roles dynamically - current role default to USER
 //        user.setRole(Role.ROLE_USER);
-//        user.setRole(Role.ROLE_AUTHOR);
+        user.setRole(Role.ROLE_AUTHOR);
 
         try {
             userDAO.saveUser(user);
@@ -72,4 +78,26 @@ public class AuthenticationService {
         return userDAO.findByUsername(input.getUsername())
                 .orElseThrow();
     }
+
+
+    public ResponseEntity<UserDTO> verifyUserLogIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) authentication.getPrincipal();
+
+        if(userDetails== null) {
+            throw new RuntimeException("User Not logged In");
+        }
+
+        User user = userDAO.findUser(userDetails.getId());
+        UserDTO res = new UserDTO();
+
+        res.setId(user.getId());
+        res.setUsername(user.getUsername());
+        res.setEmail(user.getEmail());
+        res.setRole(user.getRole());
+        res.setAvatarUrl(user.getAvatarUrl());
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
 }

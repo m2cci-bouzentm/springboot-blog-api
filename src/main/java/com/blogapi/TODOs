@@ -1,0 +1,4 @@
+1. Update role : Check if the author key is valid before assigning the user as an author
+2. Set roles dynamically - current role default to USER
+3. Exception handling with global ControllerAdvice or with AOP Before
+

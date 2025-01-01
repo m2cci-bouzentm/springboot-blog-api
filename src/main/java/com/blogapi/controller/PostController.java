@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
+@CrossOrigin
 public class PostController {
 
 
@@ -32,23 +33,23 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody PostDTO postDTO) {
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
         return postService.createPost(postDTO);
     }
 
 
-    @PutMapping
-    public ResponseEntity<String> updatePost(@RequestBody PostDTO postDTO) {
-        return postService.updatePost(postDTO);
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable String postId) {
+        return postService.updatePost(postDTO, postId);
     }
 
     @PutMapping("/publish/{postId}")
     public ResponseEntity<String> updatePostPublishState(@PathVariable String postId, @RequestBody PostDTO postDTO) {
-        return postService.updatePostPublishState(postId, postDTO.isPublished());
+        return postService.updatePostPublishState(postId, postDTO.getIsPublished());
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable String postId) {
+    public ResponseEntity<PostDTO> deletePost(@PathVariable String postId) {
         return postService.deletePost(postId);
     }
 

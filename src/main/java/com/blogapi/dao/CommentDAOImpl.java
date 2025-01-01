@@ -2,6 +2,7 @@ package com.blogapi.dao;
 
 import com.blogapi.dto.CommentDTO;
 import com.blogapi.dto.PostDTO;
+import com.blogapi.dto.UserDTO;
 import com.blogapi.entity.Comment;
 import com.blogapi.entity.Post;
 import jakarta.persistence.EntityManager;
@@ -21,14 +22,16 @@ public class CommentDAOImpl implements CommentDAO {
 
 
     private EntityManager entityManager;
+    private UserDAO userDAO;
 
     public CommentDAOImpl() {
     }
 
 
     @Autowired
-    public CommentDAOImpl(EntityManager entityManager) {
+    public CommentDAOImpl(EntityManager entityManager, UserDAO userDAO) {
         this.entityManager = entityManager;
+        this.userDAO = userDAO;
     }
 
     @Override
@@ -52,10 +55,13 @@ public class CommentDAOImpl implements CommentDAO {
         List<CommentDTO> commentsDTO = new ArrayList<>();
 
         for (Comment c : comments) {
+            UserDTO commentAuthor = new UserDTO(c.getAuthor());
             CommentDTO commentDTO = new CommentDTO(
                     c.getId(),
-                    c.getContent(), c.getPublishedAt(),
-                    c.getAuthor().getId(), c.getPost().getId()
+                    c.getContent(),
+                    c.getPublishedAt(),
+                    commentAuthor,
+                    c.getPost().getId()
             );
 
             commentsDTO.add(commentDTO);

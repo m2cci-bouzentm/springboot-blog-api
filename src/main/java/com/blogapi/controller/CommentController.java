@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/posts/{postId}/comments")
+@CrossOrigin
 public class CommentController {
     private final CommentService commentService;
 
@@ -26,17 +27,17 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCommentOnPost(@PathVariable String postId, @RequestBody CommentDTO commentDTO) {
+    public ResponseEntity<CommentDTO> createCommentOnPost(@PathVariable String postId, @RequestBody CommentDTO commentDTO) {
         return commentService.createCommentOnPost(postId, commentDTO);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<String> updateComment(@PathVariable String commentId, @RequestBody CommentDTO commentDTO) {
-        return commentService.updateComment(commentId, commentDTO);
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable String commentId, @PathVariable String postId, @RequestBody CommentDTO commentDTO) {
+        return commentService.updateComment(commentId, postId, commentDTO);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> deleteComment(@PathVariable String commentId) {
+    public ResponseEntity<CommentDTO> deleteComment(@PathVariable String commentId) {
         return commentService.deleteComment(commentId);
     }
 }
