@@ -40,8 +40,6 @@ public class CommentService {
 
 
     public ResponseEntity<CommentDTO> createCommentOnPost(@PathVariable String postId, CommentDTO commentDTO) {
-        try {
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             CustomUserDetailsImpl currentUser= (CustomUserDetailsImpl) authentication.getPrincipal();
@@ -59,14 +57,9 @@ public class CommentService {
 
             userDAO.saveUser(author);
             return new ResponseEntity<>(commentDTO, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public ResponseEntity<CommentDTO> updateComment(String commentId, String postId,  CommentDTO commentDTO) {
-
-        try {
             Comment comment = commentDAO.findById(commentId);
             User author = userDAO.findUser(comment.getAuthor().getId());
             Post post = postDAO.findPostById(postId);
@@ -79,18 +72,11 @@ public class CommentService {
             commentDAO.saveComment(comment);
 
             return new ResponseEntity<>(commentDTO, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public ResponseEntity<CommentDTO> deleteComment(String commentId) {
-        try {
             CommentDTO commentDTO = new CommentDTO();
             commentDAO.deleteComment(commentId);
             return new ResponseEntity<>(commentDTO, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

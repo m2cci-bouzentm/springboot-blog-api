@@ -68,14 +68,8 @@ public class AuthenticationService {
             user.setRole(Role.ROLE_USER);
         }
 
-        try {
-            userDAO.saveUser(user);
-            return user;
-        } catch (UniqueConstraintViolationException e) {
-            throw new UniqueConstraintViolationException(e);
-        }
-
-
+        userDAO.saveUser(user);
+        return user;
     }
 
     public User authenticate(UserDTO input) {

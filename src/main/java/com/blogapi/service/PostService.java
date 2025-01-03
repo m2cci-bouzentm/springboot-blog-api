@@ -51,7 +51,6 @@ public class PostService {
 
     public ResponseEntity<PostDTO> createPost(PostDTO postDTO) {
 
-        try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) authentication.getPrincipal();
             User author = userDAO.findUser(userDetails.getId());
@@ -67,15 +66,13 @@ public class PostService {
             userDAO.saveUser(author);
 
             return new ResponseEntity<>(postDTO, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public ResponseEntity<PostDTO> updatePost(PostDTO postDTO, String postId) {
 
-        try {
             Post post = postDAO.findPostById(postId);
+
+
 
 
             post.setTitle(postDTO.getTitle());
@@ -85,28 +82,17 @@ public class PostService {
 
             postDAO.savePost(post);
             return new ResponseEntity<>(postDTO, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public ResponseEntity<String> updatePostPublishState(String postId, boolean publishStatus) {
-        try {
             postDAO.updatePostPublishStatus(postId, publishStatus);
             return new ResponseEntity<>("Updated post's published status successfully", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
     public ResponseEntity<PostDTO> deletePost(String postId) {
-        try {
             PostDTO postDTO  = new PostDTO();
             postDAO.deletePost(postId);
             return new ResponseEntity<>(postDTO, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

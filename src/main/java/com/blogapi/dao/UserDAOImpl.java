@@ -55,11 +55,7 @@ public class UserDAOImpl implements UserDAO {
             user = entityManager.merge(user);
         }
 
-        try {
             entityManager.persist(user);
-        } catch (PersistenceException e) {
-            throw new UniqueConstraintViolationException("Duplicate email or username");
-        }
     }
 
     @Override

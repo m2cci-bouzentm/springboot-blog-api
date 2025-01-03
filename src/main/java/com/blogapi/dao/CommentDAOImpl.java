@@ -1,20 +1,16 @@
 package com.blogapi.dao;
 
 import com.blogapi.dto.CommentDTO;
-import com.blogapi.dto.PostDTO;
 import com.blogapi.dto.UserDTO;
 import com.blogapi.entity.Comment;
-import com.blogapi.entity.Post;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -22,16 +18,14 @@ public class CommentDAOImpl implements CommentDAO {
 
 
     private EntityManager entityManager;
-    private UserDAO userDAO;
 
     public CommentDAOImpl() {
     }
 
 
     @Autowired
-    public CommentDAOImpl(EntityManager entityManager, UserDAO userDAO) {
+    public CommentDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.userDAO = userDAO;
     }
 
     @Override
