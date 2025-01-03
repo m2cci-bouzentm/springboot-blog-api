@@ -1,17 +1,21 @@
 services:
-  blog-api-container:
-    image: blog-api
+  blog-api-container-dev:
+    build:
+      context: .
+      dockerfile: ./Dockerfile_dev
     ports:
       - 8081:8080
     depends_on:
       - blog-db
-    env_file: .env
+    volumes:
+      - .:/app
+#    entrypoint: ["mvn", "spring-boot:run"]
 
   blog-db:
     image: postgres
     volumes:
       - /home/mohamed/databases/blog-api:/var/lib/postgresql
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       - POSTGRES_PASSWORD=123456

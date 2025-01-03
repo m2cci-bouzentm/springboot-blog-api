@@ -14,6 +14,8 @@ public class UserDTO {
     private String email;
 
     private String password;
+    private String passwordConfirmation;
+    private String authorKey;
 
     private Role role;
 
@@ -79,5 +81,21 @@ public class UserDTO {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
+    }
+
+    public String getAuthorKey() {
+        return authorKey;
+    }
+
+    public void setAuthorKey(String authorKey) {
+        this.authorKey = authorKey;
     }
 }

@@ -8,6 +8,7 @@ import com.blogapi.entity.Role;
 import com.blogapi.entity.User;
 import com.blogapi.exception.UniqueConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,9 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+
+    @Value("${authorKey}")
+    private String authorKey;
 
     @Autowired
     public AuthenticationService(
@@ -51,11 +55,18 @@ public class AuthenticationService {
 
         user.setUsername(input.getUsername());
         user.setEmail(input.getEmail());
-        user.setPassword(passwordEncoder.encode(input.getPassword()));
 
-//        TODO set roles dynamically - current role default to USER
-//        user.setRole(Role.ROLE_USER);
-        user.setRole(Role.ROLE_AUTHOR);
+        if (input.getPassword().equals(input.getPasswordConfirmation())) {
+            user.setPassword(passwordEncoder.encode(input.getPassword()));
+        } else {
+            throw new IllegalArgumentException("Password Confirmation does not match");
+        }
+
+        if (input.getAuthorKey().equals(authorKey)) {
+            user.setRole(Role.ROLE_AUTHOR);
+        } else {
+            user.setRole(Role.ROLE_USER);
+        }
 
         try {
             userDAO.saveUser(user);
@@ -84,7 +95,7 @@ public class AuthenticationService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetailsImpl userDetails = (CustomUserDetailsImpl) authentication.getPrincipal();
 
-        if(userDetails== null) {
+        if (userDetails == null) {
             throw new RuntimeException("User Not logged In");
         }
 
